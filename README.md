@@ -1,16 +1,100 @@
-# whisper_flutter
+# Whisper Flutter (Android Only)
 
-A new Flutter project.
+A Flutter plugin that brings OpenAI's Whisper ASR (Automatic Speech Recognition) capabilities natively into your Android app. It supports offline speech-to-text transcription using Whisper models directly on the device.
+
+---
+
+## Features
+
+- Real-time Microphone Input and Transcription: Capture audio directly from the microphone and get instant transcriptions.
+- Whisper Models: Leverages the power of Whisper models (Tiny model included by default for a lightweight experience).
+- Android Focused: Thoroughly tested and confirmed to be working seamlessly only for Android devices.
+- Offline Functionality: No need for external APIs or cloud services – all processing happens directly on the device.
+- Native Integration: Efficiently integrates the native `whisper.cpp` library for optimal performance.
+
+---
+
+## Installation
+
+1. Add the dependency:
+
+    Open your `pubspec.yaml` file and add the following line under `dependencies`:
+
+    ```yaml
+    whisper_flutter: ^latest_version  # Replace with the latest version (current 0.1.0)
+    ```
+
+2. Get the packages:
+
+    Run the following command in your terminal within your Flutter project directory:
+
+    ```bash
+    flutter pub get
+    ```
+
+3. Ensure CMake and NDK Support (Android):
+
+    Make sure your Android project is configured to use CMake and the Android NDK. Flutter projects typically include this setup by default. If you encounter build issues related to native code, refer to the Flutter documentation on adding native code to your project.
+
+---
+
+## Platform Support
+
+| Platform | Status     |
+|----------|------------|
+| Android  | Working    |
+| iOS      | Planned    |
+| Web      | Not yet    |
+
+---
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+1. Import the package:
 
-A few resources to get you started if this is your first Flutter project:
+    In your Dart code, import the `whisper_flutter` library:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+    ```dart
+    import 'package:whisper_flutter/whisper_flutter.dart';
+    ```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+2. Use the plugin for transcription:
+
+    Here's a basic example of how to transcribe an audio file:
+
+    ```dart
+    void main() async {
+      WidgetsFlutterBinding.ensureInitialized();
+      final String audioPath = '/path/to/your/audio.wav';
+
+      try {
+        final TranscriptionResult? result = await WhisperFlutter.transcribe(audioPath: audioPath);
+        if (result != null && result.text.isNotEmpty) {
+          print('Transcription: ${result.text}');
+        } else {
+          print('Transcription failed or returned an empty result.');
+        }
+      } catch (e) {
+        print('Error during transcription: \$e');
+      }
+    }
+    ```
+
+---
+
+## Project Structure
+
+├── lib/  
+│   └── whisper_flutter.dart         # Dart wrapper and plugin interface  
+├── src/  
+│   ├── main.cpp                     # Native C++ bindings  
+├── android/  
+│   ├── build.gradle  
+│   ├── src/main/  
+│   │   └── java/com/example/whisper_flutter/  # Android JNI bridge  
+│   │   └── cpp/                     # Compiled native library output  
+│   ├── CMakeLists.txt  
+├── example/  
+│   ├── lib/main.dart               # Sample Flutter usage project  
+├── .gitignore  
+└── README.md
